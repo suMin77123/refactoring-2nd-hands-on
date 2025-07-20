@@ -9,6 +9,7 @@ export default function statement(invoice, plays) {
     const result = Object.assign({}, aPerformance);
     result.play = playFor(result);
     result.amount = amountFor(result);
+    result.volumeCredits = volumeCreditsFor(result);
     return result;
   }
 
@@ -38,6 +39,14 @@ export default function statement(invoice, plays) {
     }
     return result;
   }
+
+  function volumeCreditsFor(aPerformance) {
+    let result = 0;
+    result += Math.max(aPerformance.audience - 30, 0);
+    if ("comedy" === aPerformance.play.type)
+      result += Math.floor(aPerformance.audience / 5);
+    return result;
+  }
 }
 
 function renderPlainText(data, plays) {
@@ -52,14 +61,6 @@ function renderPlainText(data, plays) {
   result += `적립 포인트: ${totalVolumeCredits()}점\n`;
   return result;
 
-  function volumeCreditsFor(aPerformance) {
-    let result = 0;
-    result += Math.max(aPerformance.audience - 30, 0);
-    if ("comedy" === aPerformance.play.type)
-      result += Math.floor(aPerformance.audience / 5);
-    return result;
-  }
-
   function usd(aNumber) {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
@@ -71,7 +72,7 @@ function renderPlainText(data, plays) {
   function totalVolumeCredits() {
     let result = 0;
     for (let perf of data.performances) {
-      result += volumeCreditsFor(perf);
+      result += perf.volumeCredits;
     }
     return result;
   }
