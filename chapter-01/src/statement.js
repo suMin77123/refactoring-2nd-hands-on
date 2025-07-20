@@ -7,7 +7,12 @@ export default function statement(invoice, plays) {
 
   function enrichPerformance(aPerformance) {
     const result = Object.assign({}, aPerformance);
+    result.play = playFor(result);
     return result;
+  }
+
+  function playFor(aPerformance) {
+    return plays[aPerformance.playID];
   }
 }
 
@@ -46,10 +51,6 @@ function renderPlainText(data, plays) {
         throw new Error(`알 수 없는 장르: ${playFor(aPerformance).type}`);
     }
     return result;
-  }
-
-  function playFor(aPerformance) {
-    return plays[aPerformance.playID];
   }
 
   function volumeCreditsFor(aPerformance) {
